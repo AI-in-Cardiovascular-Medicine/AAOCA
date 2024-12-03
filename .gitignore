@@ -1,0 +1,10 @@
+.idea
+*.npy
+numpy_datasets
+/results
+old_code
+.env
+*.nii.gz
+*.zip
+dataset
+similarity_features
