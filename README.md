@@ -363,6 +363,28 @@ samples/narco/12065293/img.nii.gz | 0.00065958395  | 0    | 0
 
 *Note*: One can also download data [A-Large-Scale-Dataset-and-Benchmark-for-Coronary-Artery-Segmentation-based-on-CT](https://www.kaggle.com/datasets/xiaoweixumedicalai/imagecas) which includes 1000 samples and apply the models to them. 
 
+## Inference Time:
+To have the inference time add `--timeit` to inference code.
+
+Notes: 
+1. whole time includes loading models, cropping, and model inferences.
+2. CPU: Core-i9
+3. GPU: Nvidia 4090
+4. All the times are on one sample
+
+records | cropped      | seg n-folds | n-cls-models | device | whole time | classification time | segmentation time | cropping time |
+---|--------------|-------------|--------------|--------|------------|---------------------|-------------------|--------|
+0 | yes          | -           | 1            | cpu    | 2.38       | 1.01                | -                 | -| 
+1 | yes          | -           | 5            | cpu    | 10.14      | 4.57                | -                 |-| 
+2 | yes          | -           | 1 | cuda   | 1.68       | 0.14                | -                 | -|            
+3 | yes          | -           | 5            | cuda   | 6.70       | 0.28                | -                 |-|
+2 | No           | 5           | 5 | cuda   | 27.35      | 1.09                | 12.73             | 6.56
+2 | No           | 1           | 5 | cuda   | 24.18      | 1.07                | 9.80              | 6.57
+2 | No           | 5           | 5 | cpu    | 240.02     | 4.68                | 223               | 6.20
+2 | No           | 1           | 5 | cpu    | 72.25      | 5.16                | 54.72             | 6.25
+
+
+
 # DockerFiles:
 For docker files and inference please check [docker_project](docker_project/README.md) directory.
 

@@ -1,3 +1,5 @@
+import time
+
 import torch
 import numpy as np
 
@@ -8,7 +10,6 @@ from os.path import join
 import pandas as pd
 from deep_utils import DirUtils
 from collections import defaultdict
-from nnunetv2.inference.predict_from_raw_data import nnUNetPredictor
 
 from preprocessing_cropping import process_sample
 from utils import load_model, normalize_and_resample
@@ -50,7 +51,8 @@ def get_predictions(sample_path: str,
                     device: torch.device | str,
                     is_cropped: bool,
                     seg_predictor,
-                    keep_crops: bool = False):
+                    keep_crops: bool = False,
+                    timeit: bool=False):
     """
     Generates predictions from an ensemble of models and computes metrics based on input threshold.
     :param sample_path: Path to the input sample (single image or directory).
@@ -60,6 +62,7 @@ def get_predictions(sample_path: str,
     :param is_cropped:
     :param seg_predictor: nnunet model
     :param keep_crops: keep the cropped samples
+    :param timeit: profile the time
     :return: tuple:
             - names (list[str]): Names of the samples processed.
             - model_predictions (dict): Predictions from each model in the ensemble.
@@ -69,12 +72,14 @@ def get_predictions(sample_path: str,
     models = [load_model(model_path, device).eval() for model_path in model_paths]
     model_predictions = defaultdict(list)
     mean_predictions = dict()
+    if timeit:
+        pred_tic = time.time()
     with torch.no_grad():
         for path in full_paths:
             print(f"[INFO] Inferencing on {path}")
             img_name = path
             if not is_cropped:
-                path = crop_sample(path, seg_predictor, keep_crops)
+                path = crop_sample(path, seg_predictor, keep_crops, timeit=timeit)
                 img = get_resampled_torch_img(path)
                 if not keep_crops:
                     os.remove(path)
@@ -82,14 +87,19 @@ def get_predictions(sample_path: str,
             else:
                 img = get_resampled_torch_img(path)
             ensemble_predictions = []
+            if timeit:
+                cls_tic = time.time()
             for index, net in enumerate(models):
                 logits = net(img[None, ...].to(device))
                 pred = torch.sigmoid(logits[0, 0]).cpu().numpy()
                 model_predictions[index].append([img_name, pred, 1 if pred > threshold else 0])
                 ensemble_predictions.append(pred)
+            if timeit:
+                print(f"[INFO] Elapsed time for classification: {time.time() - cls_tic}")
             mean_prediction = np.mean(ensemble_predictions, axis=0)
             mean_predictions[img_name] = (mean_prediction, 1 if mean_prediction > threshold else 0)
-
+    if timeit:
+        print(f"[INFO] Elapsed time for prediction [segmentation + cropping + classification]: {time.time() - pred_tic}")
     return mean_predictions, model_predictions
 
 
@@ -110,18 +120,21 @@ def get_file_paths(dataset_root_path: str) -> list[str]:
     return full_paths
 
 
-def crop_sample(input_path, seg_predictor, keep_crops: bool) -> str:
+def crop_sample(input_path, seg_predictor, keep_crops: bool, timeit: bool=False) -> str:
     """
     First segmentation is done, then based on that samples are cropped!
     :param input_path:
     :param seg_predictor:
     :param keep_crops:
+    :param timeit:
     :return:
     """
     seg_path = DirUtils.split_extension(input_path, suffix="_seg", current_extension=".nii.gz")
     cropped_seg_path = DirUtils.split_extension(seg_path, suffix="_cropped", current_extension=".nii.gz")
     cropped_img_path = DirUtils.split_extension(input_path, suffix="_cropped", current_extension=".nii.gz")
     print(f"{input_path} and {seg_path}")
+    if timeit:
+        seg_tic = time.time()
     seg_predictor.predict_from_files(
         [[input_path]],
         [seg_path],
@@ -132,8 +145,14 @@ def crop_sample(input_path, seg_predictor, keep_crops: bool) -> str:
         folder_with_segs_from_prev_stage=None,
         num_parts=1,
         part_id=0)
+    if timeit:
+        print(f"[INFO] Elapsed time for segmentation: {time.time() - seg_tic}")
+    if timeit:
+        crop_tic = time.time()
     process_sample(seg_path, cropped_img_path, cropped_seg_path, input_path, (8, 8, 6),
                    2, 3, (-1, 1, 1))
+    if timeit:
+        print(f"[INFO] Elapsed time for cropping: {time.time() - crop_tic}")
     if not keep_crops:
         os.remove(cropped_seg_path)
         os.remove(seg_path)
@@ -160,15 +179,19 @@ if __name__ == "__main__":
     parser.add_argument("--seg_checkpoint_name", default="checkpoint_final.pth",
                         help="checkpoint_final.pth or checkpoint_best.pth")
     parser.add_argument("--keep_crops", action="store_true", help="If set to True, keeps the crops and segmentations")
+    parser.add_argument("--timeit", action="store_true", help="If set to True, profiles the inference time!")
     args = parser.parse_args()
     args.device = "cpu" if not torch.cuda.is_available() else args.device
     # Create the output directory if it does not exist
     os.makedirs(args.output_path, exist_ok=True)
 
+    if args.timeit:
+        whole_tic = time.time()
     # Clear GPU memory if using CUDA
     if "cuda" in args.device:
         torch.cuda.empty_cache()
     if not args.is_cropped:
+        from nnunetv2.inference.predict_from_raw_data import nnUNetPredictor
         seg_predictor = nnUNetPredictor(
             tile_step_size=0.5,
             use_gaussian=True,
@@ -187,14 +210,15 @@ if __name__ == "__main__":
         )
     else:
         seg_predictor = None
-
     # Generate predictions for the given samples using the specified models and thresholds
     mean_predictions, model_predictions = get_predictions(args.sample_path, model_paths=args.model_path,
                                                           threshold=args.threshold, device=args.device,
                                                           is_cropped=args.is_cropped,
                                                           seg_predictor=seg_predictor,
-                                                          keep_crops=args.keep_crops)
-
+                                                          keep_crops=args.keep_crops,
+                                                          timeit=args.timeit)
+    if args.timeit:
+        print(f"[INFO] Elapsed time for whole: {time.time() - whole_tic}")
     # Save individual model predictions to separate directories
     os.makedirs(args.output_path, exist_ok=True)
     df = pd.DataFrame([[img_name, pred, cls] for img_name, (pred, cls) in mean_predictions.items()],
