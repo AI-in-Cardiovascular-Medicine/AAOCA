@@ -62,7 +62,7 @@ docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_
 The output reports are in `output/output.txt` and `output/output.json`.
 
 ## Expected Output for the samples:
-Download the samples from the Inference on samples data and put them in the input directory, then run the following:
+Download the samples from the `Inference on samples data` and put them in the `input` directory, then run the following:
 ```commandline
 docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/normal/10064059/img.nii.gz --is_nifti
 docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/narco/11943667/img.nii.gz --is_nifti
@@ -71,9 +71,7 @@ docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_
 docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/narco/12076929/img.nii.gz --is_nifti
 ```
 Expected Outputs:
-```
-{"anomaly": 0.0, "risk": 0, "origin": 0, "report": "No coronary anomalies (AAOCA) have been detected."}
-```
+
 **Note:** The range is from 0 to 100.
 ```json
 10064059: {"anomaly": 0.0, "risk": 0, "origin": 0, "report": "No coronary anomalies(AAOCA) have been detected."}
