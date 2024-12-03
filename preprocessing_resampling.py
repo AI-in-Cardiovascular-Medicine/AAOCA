@@ -76,6 +76,9 @@ def main():
     resampling_shape = args.resampling_resolution
     name_resampled_imgs = args.name_output_image + ".nii.gz"
     outcomes = ["0", "1"]
+    # 0 -> healthy, 1 -> narco patients
+    # 0 -> right origin, 1 -> left origin
+    # 0 -> low risk, 1 -> high risk
 
     print(f"--- Processing folder {dataset_path} ---")
     os.makedirs(split(output_path)[0], exist_ok=True)  # Create output directory if it doesn't exist.
