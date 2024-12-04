@@ -371,6 +371,7 @@ Notes:
 2. CPU: Core-i9
 3. GPU: Nvidia 4090
 4. All the times are on one sample
+5. The numbers are in seconds
 
 records | cropped      | seg n-folds | n-cls-models | device | whole time | classification time | segmentation time | cropping time |
 ---|--------------|-------------|--------------|--------|------------|---------------------|-------------------|--------|
