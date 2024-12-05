@@ -22,25 +22,25 @@ def get_device():
 
 
 ANOMALY_DETECTION_MODEL_PATH = [
-    "web_service_models/anomaly_detection/model_1/best_val_model.pt",
-    "web_service_models/anomaly_detection/model_2/best_val_model.pt",
-    "web_service_models/anomaly_detection/model_3/best_val_model.pt",
-    "web_service_models/anomaly_detection/model_4/best_val_model.pt",
-    "web_service_models/anomaly_detection/model_5/best_val_model.pt",
+    "web_service_models/classification_models/anomaly_detection/model_1/best_val_model.pt",
+    "web_service_models/classification_models/anomaly_detection/model_2/best_val_model.pt",
+    "web_service_models/classification_models/anomaly_detection/model_3/best_val_model.pt",
+    "web_service_models/classification_models/anomaly_detection/model_4/best_val_model.pt",
+    "web_service_models/classification_models/anomaly_detection/model_5/best_val_model.pt",
 ]
 RISK_CLASSIFICATION_MODEL_PATH = [
-    "web_service_models/risk_classification/model_1/best_val_model.pt",
-    "web_service_models/risk_classification/model_2/best_val_model.pt",
-    "web_service_models/risk_classification/model_3/best_val_model.pt",
-    "web_service_models/risk_classification/model_4/best_val_model.pt",
-    "web_service_models/risk_classification/model_5/best_val_model.pt"
+    "web_service_models/classification_models/risk_classification/model_1/best_val_model.pt",
+    "web_service_models/classification_models/risk_classification/model_2/best_val_model.pt",
+    "web_service_models/classification_models/risk_classification/model_3/best_val_model.pt",
+    "web_service_models/classification_models/risk_classification/model_4/best_val_model.pt",
+    "web_service_models/classification_models/risk_classification/model_5/best_val_model.pt"
 ]
 ORIGIN_CLASSIFICATION_MODEL_PATH = [
-    "web_service_models/origin_classification/model_1/best_val_model.pt",
-    "web_service_models/origin_classification/model_2/best_val_model.pt",
-    "web_service_models/origin_classification/model_3/best_val_model.pt",
-    "web_service_models/origin_classification/model_4/best_val_model.pt",
-    "web_service_models/origin_classification/model_5/best_val_model.pt",
+    "web_service_models/classification_models/origin_classification/model_1/best_val_model.pt",
+    "web_service_models/classification_models/origin_classification/model_2/best_val_model.pt",
+    "web_service_models/classification_models/origin_classification/model_3/best_val_model.pt",
+    "web_service_models/classification_models/origin_classification/model_4/best_val_model.pt",
+    "web_service_models/classification_models/origin_classification/model_5/best_val_model.pt",
 
 ]
 SEGMENTATION_MODEL_PATH = "web_service_models/cardiac_segmentation"
@@ -57,7 +57,7 @@ def get_modes_performance(models_path: list[str], fast: bool, device, img: torch
         if fast:
             return percentage
         percentages.append(percentage)
-    return np.mean(percentages) * 100
+    return np.mean(percentages)
 
 
 @torch.no_grad()
@@ -74,7 +74,8 @@ def process_cropped_sample(img_path: str | np.ndarray, threshold: float, device,
         anomaly_percentage = get_modes_performance(ANOMALY_DETECTION_MODEL_PATH, fast, device, img)
         anomaly = 1 if anomaly_percentage > threshold else 0
     else:
-        anomaly_percentage = anomaly = 1
+        anomaly_percentage = 1
+        anomaly = 1
 
     if anomaly == 1:
         origin = get_modes_performance(ORIGIN_CLASSIFICATION_MODEL_PATH, fast, device, img)
@@ -160,15 +161,16 @@ def main_inference(input_path: str,
 
 
 def create_output_file(report: dict, thresh: float, txt_path: str):
-    anomaly_val = report.get("anomaly")
+    thresh *= 100
+    anomaly_val = report.get("anomaly") * 100
     if anomaly_val < thresh:
         anomaly_label = "Normal"
         origin_val = origin_label = "-"
         risk_val = risk_label = "-"
     else:
         anomaly_label = "AAOCA"
-        origin_val = report.get("origin")
-        risk_val = report.get("risk")
+        origin_val = report.get("origin") * 100
+        risk_val = report.get("risk") * 100
         if origin_val < thresh:
             origin_label = "R-AAOCA"
         else:
@@ -182,7 +184,7 @@ def create_output_file(report: dict, thresh: float, txt_path: str):
         f.write(
             "############################################################################################################################\n")
         f.write(
-            "##################################################      Model Outputs     ##################################################\n")
+            f"##########################################     Model Outputs for threshold: {round(thresh)}    ##########################################\n")
         f.write("                              |   Anomaly Detection          |     Origin Classification    |Anatomical Risk Classification\n")
         line = "Probability".center(distance) + "|" + str(anomaly_val).center(distance) + "|" + str(origin_val).center(
             distance) + "|" + str(risk_val).center(distance) + "\n"
@@ -215,10 +217,10 @@ def main(args):
     output_path = join(OUTPUT_DIR, img_name)
     input_path = join(INPUT_DIR, args.input_path)
     output = main_inference(input_path, output_path, args.is_cropped, args.is_nifti, args.threshold, device, args.fast)
-    output['report'] = create_report(output, args.threshold)
-    JsonUtils.dump(join(OUTPUT_DIR, "output.json"), output)
-    create_output_file(output, args.threshold * 100, join(OUTPUT_DIR, "output.txt"))
-    print(f"[INFO] Finished in {time.time() - tic}")
+    output['report'] = create_report(output, args.threshold )
+    JsonUtils.dump(join(OUTPUT_DIR, "output.json"), {k: (v * 100) if isinstance(v, float) else v  for k, v in output.items()})
+    create_output_file(output, args.threshold , join(OUTPUT_DIR, "output.txt"))
+    print(f"[INFO] Finished in {time.time() - tic} with threshold: {args.threshold}")
 
 
 if __name__ == '__main__':
