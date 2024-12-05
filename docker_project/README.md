@@ -50,6 +50,10 @@ Create two folders namely `input` and `output`. Then, put input image in the inp
 ```commandline
 docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path img-path.nii.gz --is_cropped --is_nifti
 ```
+## Running cropped nifti file with threshold
+```commandline
+docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path img-path.nii.gz --is_cropped --is_nifti --threshold 0.5
+```
 ## Running non cropped nifti file
 ```commandline
 docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path img-path.nii.gz --is_nifti
@@ -84,7 +88,7 @@ Expected Outputs:
 The report.txt is like the following:
 ```commandline
 ############################################################################################################################
-##################################################      Model Outputs     ##################################################
+##########################################     Model Outputs for threshold: 70    ##########################################
                               |   Anomaly Detection          |     Origin Classification    |Anatomical Risk Classification
          Probability          |            81.39             |            100.0             |             0.0              
         Final Results         |            AAOCA             |           L-AAOCA            |           Low Risk           
@@ -92,4 +96,15 @@ The report.txt is like the following:
 ################################################## Final Diagnosis Report ##################################################
 R-AAOCA has been detected with anatomical low-risk features.
 ############################################################################################################################
+```
+
+
+## Save docker image:
+```commandline
+docker save narco_script:latest -o narco_script.tar
+```
+
+## Load docker image:
+```commandline
+docker load -i narco_script.tar
 ```
