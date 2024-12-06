@@ -1,5 +1,5 @@
 import os
-from typing import Dict, List
+from typing import Literal, Dict, List
 from os.path import join
 
 import pandas as pd
@@ -24,7 +24,6 @@ def compute_metrics(y_true: ArrayLike, y_pred: ArrayLike, thresh: float = 0.5):
     """
     # Compute metrics
     precision, recall, f1score, _ = precision_recall_fscore_support(y_true, y_pred > thresh, average='binary')
-    aupr = average_precision_score(y_true, y_pred > thresh)
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred > thresh).ravel()
     specificity = tn / (tn + fp)
     # Store metrics into the output dictionary
@@ -34,7 +33,7 @@ def compute_metrics(y_true: ArrayLike, y_pred: ArrayLike, thresh: float = 0.5):
         "specificity": specificity,
         "f1-score": f1score,
         "ppv": precision,
-        "aupr": aupr,
+        "aupr": average_precision_score(y_true, y_pred),
         "accuracy": accuracy_score(y_true, y_pred > thresh),
         "tp": tp,
         "tn": tn,
@@ -45,7 +44,7 @@ def compute_metrics(y_true: ArrayLike, y_pred: ArrayLike, thresh: float = 0.5):
 
 
 def ensemble_metrics(folders_path: list[str], test_dataset: str, thresh: float,
-                     gender: str,
+                     gender: Literal["male", "female", ""],
                      gender_dict: dict[str, str] | None):
     """
     Compute ensemble performance metrics and predictions for multiple models.
@@ -94,15 +93,14 @@ def ensemble_metrics(folders_path: list[str], test_dataset: str, thresh: float,
     return pd.DataFrame([metrics_ens, metrics.mean().to_dict()], index=['ensemble', 'mean']).transpose(), df_ensemble
 
 
-def metrics_single_models(folders_path: list[str], test_datasets: list, thresh: float,
-                          genders: List[str],
+def metrics_single_models(folders_path: list[str], test_datasets: list, thresh: float, genders: List[Literal["m", "f", ""]],
                           gender_dicts: List[Dict[str, str] | None]):
     """
     Compute metrics for multiple models across different test datasets.
     :param folders_path: List of paths to the folders containing model prediction files.
     :param test_datasets: List of test dataset names (used to locate prediction files).
     :param thresh: The threshold for binarizing the model predictions.
-    :param genders: List of genders to filter the datasets by, or empty string for no filtering. Inputs: f, m, ''
+    :param genders: List of genders to filter the datasets by, or empty string for no filtering.
     :param gender_dicts: List of dictionaries mapping filenames to gender labels for filtering, or None if no filtering is required.
     :return:
     """
@@ -136,7 +134,7 @@ def metrics_single_models(folders_path: list[str], test_datasets: list, thresh: 
 
 
 def ensemble_metrics_for_different_thresholds(thresholds: ArrayLike, test_dataset: str, folders: list[str],
-                                              gender: str, gender_dict: Dict[str, str] | None):
+                                              gender: Literal["male", "female", ""], gender_dict: Dict[str, str] | None):
     """
     Compute ensemble metrics for multiple thresholds on a test dataset.
     :param thresholds: A list of thresholds to evaluate the ensemble metrics.
@@ -176,7 +174,8 @@ def add_gender(filename: str, gender: str, name: bool = False):
 
 
 def plot_confusion_matrix(predictions: ArrayLike, labels: ArrayLike, output_path: str | None, title: str,
-                          title_size: float = 16, size: float = 11, dpi: int = 300, show: bool = True):
+                          title_size: float = 16, size: float = 20, label_size: int = 20, dpi: int = 300,
+                          show: bool = True):
     """
     Plot and save a confusion matrix with customizable appearance.
     :param predictions: Predicted labels.
@@ -184,7 +183,8 @@ def plot_confusion_matrix(predictions: ArrayLike, labels: ArrayLike, output_path
     :param output_path: Path to save the confusion matrix plot. If None, the image is not saved.
     :param title: Title of the plot.
     :param title_size: Font size for the title and axis labels (default is 16).
-    :param size: Font size for confusion matrix text (default is 11).
+    :param size: Font size for confusion matrix text (default is 20).
+    :param label_size: Font size for x/y labels (default is 20).
     :param dpi: Output figure's dpi (default is 300).
     :param show: If True, display the plot; otherwise, save and close it (default is True).
     :return:
@@ -195,10 +195,10 @@ def plot_confusion_matrix(predictions: ArrayLike, labels: ArrayLike, output_path
     plt.title(title, fontsize=title_size)
     plt.grid(False)
     plt.tight_layout()
-    plt.yticks(fontsize=title_size)
-    plt.xticks(fontsize=title_size)
-    disp.ax_.xaxis.label.set_fontsize(title_size)
-    disp.ax_.yaxis.label.set_fontsize(title_size)
+    plt.yticks(fontsize=size)
+    plt.xticks(fontsize=size)
+    disp.ax_.xaxis.label.set_fontsize(label_size)
+    disp.ax_.yaxis.label.set_fontsize(label_size)
     if output_path:
         plt.savefig(output_path, bbox_inches='tight', dpi=dpi)
     if show:
@@ -212,6 +212,9 @@ def main():
         "test_internal": JsonUtils.load("internal_gender_img_names.json"),
         "test_external": JsonUtils.load("external_gender_img_names.json")
     }
+    for test_dataset in ["test_internal", "test_external"]:
+        gender_info[test_dataset] = {key: value.lower().strip() for key, value in gender_info[test_dataset].items()}
+
     sns.set_theme(style="white")
     color_palette = matplotlib.colormaps.get_cmap('tab10').colors
 
@@ -268,6 +271,7 @@ def main():
                     df_datasets[test_dataset] = df
                     filename = add_gender(f"predictions_{task}_{test_dataset}_{training_strategy}.xlsx", gender)
                     df.drop(columns=["filename"]).to_excel(join("raw_data_plots_tables", filename))
+                    print(f"{task} - {test_dataset} - {gender} : {len(df)}")
 
                 multi_index = pd.MultiIndex.from_product([test_datasets, ["ensemble", "means"]])
                 test_internal_external_metrics = pd.DataFrame(
