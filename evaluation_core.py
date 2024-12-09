@@ -44,7 +44,7 @@ def compute_metrics(y_true: ArrayLike, y_pred: ArrayLike, thresh: float = 0.5):
 
 
 def ensemble_metrics(folders_path: list[str], test_dataset: str, thresh: float,
-                     gender: Literal["male", "female", ""],
+                     gender: str,
                      gender_dict: dict[str, str] | None):
     """
     Compute ensemble performance metrics and predictions for multiple models.
@@ -93,7 +93,8 @@ def ensemble_metrics(folders_path: list[str], test_dataset: str, thresh: float,
     return pd.DataFrame([metrics_ens, metrics.mean().to_dict()], index=['ensemble', 'mean']).transpose(), df_ensemble
 
 
-def metrics_single_models(folders_path: list[str], test_datasets: list, thresh: float, genders: List[Literal["m", "f", ""]],
+def metrics_single_models(folders_path: list[str], test_datasets: list, thresh: float,
+                          genders: List[str],
                           gender_dicts: List[Dict[str, str] | None]):
     """
     Compute metrics for multiple models across different test datasets.
@@ -105,7 +106,8 @@ def metrics_single_models(folders_path: list[str], test_datasets: list, thresh: 
     :return:
     """
     # Validate that the number of gender_dicts and genders match the number of datasets
-    if (gender_dicts is not None) and (len(test_datasets) != len(gender_dicts)) and (len(test_datasets) != len(genders)):
+    if (gender_dicts is not None) and (len(test_datasets) != len(gender_dicts)) and (
+            len(test_datasets) != len(genders)):
         raise ValueError()
     metrics_folders = []
     for folder_path in folders_path:  # Iterate through model folders
@@ -134,7 +136,8 @@ def metrics_single_models(folders_path: list[str], test_datasets: list, thresh: 
 
 
 def ensemble_metrics_for_different_thresholds(thresholds: ArrayLike, test_dataset: str, folders: list[str],
-                                              gender: Literal["male", "female", ""], gender_dict: Dict[str, str] | None):
+                                              gender: str,
+                                              gender_dict: Dict[str, str] | None):
     """
     Compute ensemble metrics for multiple thresholds on a test dataset.
     :param thresholds: A list of thresholds to evaluate the ensemble metrics.
@@ -209,11 +212,11 @@ def plot_confusion_matrix(predictions: ArrayLike, labels: ArrayLike, output_path
 
 def main():
     gender_info = {
-        "test_internal": JsonUtils.load("internal_gender_img_names.json"),
-        "test_external": JsonUtils.load("external_gender_img_names.json")
+        "test_internal": {key: value.lower().strip() for key, value in
+                          JsonUtils.load("internal_gender_img_names.json").items()},
+        "test_external": {key: value.lower().strip() for key, value in
+                          JsonUtils.load("external_gender_img_names.json").items()}
     }
-    for test_dataset in ["test_internal", "test_external"]:
-        gender_info[test_dataset] = {key: value.lower().strip() for key, value in gender_info[test_dataset].items()}
 
     sns.set_theme(style="white")
     color_palette = matplotlib.colormaps.get_cmap('tab10').colors
@@ -224,7 +227,7 @@ def main():
         "test_external": f"External Test"
     }
 
-    n_boot = 10000
+    n_boot = 10000  # bootstrap
     threshold_title = "Cut-Off"
     dpi = 300
 
@@ -240,6 +243,7 @@ def main():
     ]
 
     # Run through task, gender and training strategy, and plot results
+    os.makedirs("raw_data_plots_tables", exist_ok=True)
     for task in ["anomaly_detection", "origin_classification", "risk_classification"]:
         print(f"----- {task} ------")
         training_strategies = ["train"] if task != "anomaly_detection" else ["train", "strategy2"]
@@ -247,10 +251,11 @@ def main():
             print(f"\t+ Gender selection: {gender if gender != '' else 'No selection'}")
             for training_strategy in training_strategies:
                 print(f"\t\tTraining strategy: {training_strategy}")
-                test_datasets = ["test_internal", "test_external"] if training_strategy == "train" else ["test_external"]
-                path = f"results/{task}/{training_strategy}/"
-                results_output_folder = f"results/{task}/{training_strategy}"
-                images_output_folder = f"images/all/{task}/{training_strategy}"
+                test_datasets = ["test_internal", "test_external"] if training_strategy == "train" else [
+                    "test_external"]
+                path = join("results", task, training_strategy)
+                results_output_folder = join("results", task, training_strategy)
+                images_output_folder = join("images", "all", task, training_strategy)
                 os.makedirs(results_output_folder, exist_ok=True)
                 os.makedirs(images_output_folder, exist_ok=True)
                 folders_path = [join(path, folder) for folder in folders]  # build folder paths
@@ -260,12 +265,14 @@ def main():
                 gender_dicts = [gender_info[test_dataset] for test_dataset in test_datasets]
                 metrics_all_models = metrics_single_models(folders_path, test_datasets=test_datasets,
                                                            thresh=threshold, genders=genders, gender_dicts=gender_dicts)
-                metrics_all_models.to_csv(join(results_output_folder, add_gender("single_models.csv", gender)), index=False)
+                metrics_all_models.to_csv(join(results_output_folder, add_gender("single_models.csv", gender)),
+                                          index=False)
 
                 metrics_datasets = {}
                 df_datasets = {}
                 for test_dataset in test_datasets:
-                    metrics, df = ensemble_metrics(folders_path=folders_path, test_dataset=test_dataset, thresh=threshold,
+                    metrics, df = ensemble_metrics(folders_path=folders_path, test_dataset=test_dataset,
+                                                   thresh=threshold,
                                                    gender=gender, gender_dict=gender_info[test_dataset])
                     metrics_datasets[test_dataset] = metrics
                     df_datasets[test_dataset] = df
@@ -290,7 +297,8 @@ def main():
                                                                                    test_dataset=test_dataset,
                                                                                    folders=folders_path,
                                                                                    gender=gender,
-                                                                                   gender_dict=gender_info[test_dataset])
+                                                                                   gender_dict=gender_info[
+                                                                                       test_dataset])
                     metrics_thresholds_datasets[test_dataset] = metrics_thresholds
 
                 multi_index = pd.MultiIndex.from_product([test_datasets, thresholds])
@@ -309,7 +317,8 @@ def main():
                     for tsh in thresholds:
                         path = join(images_output_folder, add_gender(f"confusion_matrix_{name}_{tsh}.png", gender))
                         title = add_gender(f"{name.replace('_', ' ')} - {threshold_title}: " + str(tsh), gender, True)
-                        plot_confusion_matrix(predictions=df["ensemble"] > tsh, labels=df["label"].astype(int), output_path=path,
+                        plot_confusion_matrix(predictions=df["ensemble"] > tsh, labels=df["label"].astype(int),
+                                              output_path=path,
                                               title=title, show=False)
 
                     # Plot ensemble ROC curve
