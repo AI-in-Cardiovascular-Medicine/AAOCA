@@ -372,6 +372,7 @@ Notes:
 3. GPU: Nvidia 4090
 4. All the times are on one sample
 5. The numbers are in seconds
+6. The segmentation inference depends on the input image size. The tests are for `samples/narco/11943667/img.nii.gz`.
 
 records | cropped      | seg n-folds | n-cls-models | device | whole time | classification time | segmentation time | cropping time |
 ---|--------------|-------------|--------------|--------|------------|---------------------|-------------------|--------|
