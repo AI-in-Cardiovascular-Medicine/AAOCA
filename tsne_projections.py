@@ -15,9 +15,9 @@ from sklearn.manifold import TSNE
 
 
 class TitleName(StrEnum):
-    test_external = "Test External"
-    test_internal = "Test Internal"
-    train = "Train"
+    test_external = "External testing"
+    test_internal = "Internal testing"
+    train = "Training & validation"
 
 
 def get_genders(sample_names: list, gender: str, internal_gender_data: dict, external_gender_data: dict):
@@ -33,10 +33,10 @@ def get_genders(sample_names: list, gender: str, internal_gender_data: dict, ext
     if gender:
         for name in sample_names:
             if name in internal_gender_data:
-                output.append(internal_gender_data.get(name).strip())
+                output.append(internal_gender_data.get(name).strip().lower())
                 continue
             else:
-                output.append(external_gender_data.get(name).strip())
+                output.append(external_gender_data.get(name).strip().lower())
     else:
         output = [gender for _ in sample_names]
     return output
@@ -86,40 +86,38 @@ def main():
 
     label_map = {
         "anomaly": {
-            0: f"{TitleName.test_external} Normal",
-            1: f"{TitleName.test_external} AAOCA",
-            4: f"{TitleName.train} Normal",
-            5: f"{TitleName.train} AAOCA",
-            6: f"{TitleName.test_internal} Normal",
-            7: f"{TitleName.test_internal} AAOCA"
+            0: f"{TitleName.test_external} (normal)",
+            1: f"{TitleName.test_external} (AAOCA)",
+            4: f"{TitleName.train} (normal)",
+            5: f"{TitleName.train} (AAOCA)",
+            6: f"{TitleName.test_internal} (normal)",
+            7: f"{TitleName.test_internal} (AAOCA)"
         },
         "origin": {
-            0: f"{TitleName.test_external} R-AAOCA",
-            1: f"{TitleName.test_external} L-AAOCA",
-            2: f"{TitleName.train} R-AAOCA",
-            3: f"{TitleName.train} L-AAOCA",
-            4: f"{TitleName.test_internal} R-AAOCA",
-            5: f"{TitleName.test_internal} L-AAOCA"
+            0: f"{TitleName.test_external} (R-AAOCA)",
+            1: f"{TitleName.test_external} (L-AAOCA)",
+            2: f"{TitleName.train} (R-AAOCA)",
+            3: f"{TitleName.train} (L-AAOCA)",
+            4: f"{TitleName.test_internal} (R-AAOCA)",
+            5: f"{TitleName.test_internal} (L-AAOCA)"
         },
         "risk": {
-            0: f"{TitleName.test_external} Low Risk",
-            1: f"{TitleName.test_external} High Risk",
-            2: f"{TitleName.train} Low Risk",
-            3: f"{TitleName.train} High Risk",
-            4: f"{TitleName.test_internal} Low Risk",
-            5: f"{TitleName.test_internal} High Risk",
+            0: f"{TitleName.test_external} (Low Risk)",
+            1: f"{TitleName.test_external} (High Risk)",
+            2: f"{TitleName.train} (Low Risk)",
+            3: f"{TitleName.train} (High Risk)",
+            4: f"{TitleName.test_internal} (Low Risk)",
+            5: f"{TitleName.test_internal} (High Risk)",
         }
     }
 
-    # An easy way to make different labels
     label_increase_all = {
         "anomaly": dict(test_external=0, train=4, test_internal=6),
         "origin": dict(test_external=0, train=2, test_internal=4),
         "risk": dict(test_external=0, train=2, test_internal=4)
     }
 
-    names = ['test_external', 'train', 'test_internal']
-    graph_combinations = [names]
+    graph_combinations = [('test_external', 'train', 'test_internal')]
 
     for combination in graph_combinations:
         y, sample_names, x, preds = [], [], [], []
