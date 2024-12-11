@@ -66,8 +66,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--latent_features_path", type=str, default="latent_features",
                         help="Path to the directory where DL latent features are stored.")
-    parser.add_argument("--original_data_dir", type=str,
+    parser.add_argument("--original_data_dir", type=str, required=True,
                         help="Path to the directory where DL latent features are stored.")
+    parser.add_argument("--output_dir", default="raw_data_plots_tables",
+                        help="output directory to save excel files.")
     args = parser.parse_args()
 
     data_path = args.latent_features_path
@@ -147,7 +149,7 @@ def main():
             print(f"--- {task.capitalize()} task ---")
             y, sample_names = [], []
             for name in combination:
-                data = get_names(join(original_data_dir, f"{task}_classification/{name}"), name=f"{name}",
+                data = get_names(join(original_data_dir, f"{task}_classification", name), name=f"{name}",
                                  label_increase=label_increase_all[task])
                 sample_names.extend(data["img_names"])
                 y.extend([label_map[task][lbl] for lbl in data["labels"]])
@@ -155,15 +157,15 @@ def main():
             df_task = pd.DataFrame({"img_names": sample_names, f"labels_{task}": y})
             df = df.merge(df_task, on="img_names", how="left")
 
-        path = join(data_path, "tsne_" + "-".join(combination))
-        df.to_excel(path + ".xlsx", index=False)
+        path = join(args.output_dir, "tsne_" + "-".join(combination))
+        df.drop(columns=["img_names"]).to_excel(path + ".xlsx", index=False)
 
         print(f"Creating gender datasets\n\ttot: {len(df)}")
         for gender in ["f", "m"]:
             gender_filter = [g == gender for g in get_genders(df["img_names"], gender, gender_info["internal"],
                                                               gender_info["external"])]
             print("\t", gender, ": ", sum(gender_filter))
-            df.loc[gender_filter].to_excel(path + f"_{gender}.xlsx", index=False)
+            df.loc[gender_filter].drop(columns=["img_names"]).to_excel(path + f"_{gender}.xlsx", index=False)
 
         print(f"TSNE embeddings are done for {combination} in {path}")
 
