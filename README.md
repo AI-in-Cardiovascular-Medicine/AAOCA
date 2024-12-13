@@ -256,6 +256,8 @@ python evaluation.py --model_path results/anomaly_detection/train/model_1/best_v
 # Explainability
 To understand which part of an image was the most important for the model to make the prediction, a GradCAM++ heatmap can be created.
 Given a trained model, the GradCAM++ heatmap for an input CT image which is cropped and converted to .nii.gz format can be obtained with the following command:
+
+**Note:** The input image must be cropped before passing it to the model.
 ```commandline
 python explainability.py --model_path results/anomaly_detection/train/model_1/best_val_model.pt --image_path <IMG_PATH.nii.gz> --output_path gradcams/heatmap.nii.gz 
 ```
