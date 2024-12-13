@@ -15,7 +15,7 @@ from torch import nn
 from utils import normalize_and_resample, load_model
 
 
-def get_grad_cam(out_grad_path: str, layer_name: str, net: nn.Module, img_path: str):
+def get_grad_cam(out_grad_path: str, layer_name: str, net: nn.Module, img_path: str, device):
     """
     Generates a Grad-CAM++ heatmap for a trained model and input image and saves the result as a NIfTI image.
     :param out_grad_path: The output file path for saving the Grad-CAM++ heatmap. If the file already exists, the
@@ -42,8 +42,8 @@ def get_grad_cam(out_grad_path: str, layer_name: str, net: nn.Module, img_path: 
     result = result.swapaxes(2, 3).swapaxes(3, 4)
     result = 1 - result[0, 0, :].cpu().numpy()
 
+    # Resample to original shape
     original_pixel = result.shape
-    # Resample image
     target_pixel = org_arr.shape
     target_ratio = [(original_pixel[i] / target_pixel[i]) for i in range(len(original_pixel))]
     transform = tio.Resample(target=target_ratio, image_interpolation="bspline")
@@ -84,4 +84,4 @@ if __name__ == '__main__':
     if directory_path:
         os.makedirs(directory_path, exist_ok=True)
     # Generate the Grad-CAM++ heatmap and save it to the specified output path
-    get_grad_cam(output_path, layer, net, image_path)
+    get_grad_cam(output_path, layer, net, image_path, device=device)
