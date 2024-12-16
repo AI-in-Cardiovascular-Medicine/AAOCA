@@ -1,11 +1,11 @@
+import os
 import shutil
+from argparse import ArgumentParser
 
 import torch.cuda
 from nnunetv2.inference.predict_from_raw_data import nnUNetPredictor
 
 from utils import *
-from argparse import ArgumentParser
-import os
 
 
 def get_device():
@@ -94,13 +94,13 @@ def create_report(output: dict, threshold):
         txt = "No coronary anomalies (AAOCA) have been detected."
     else:
         if l_origin and risk:
-            txt = "R-AAOCA has been detected with anatomical high-risk features."
-        elif not l_origin and risk:
             txt = "L-AAOCA has been detected with anatomical high-risk features."
+        elif not l_origin and risk:
+            txt = "R-AAOCA has been detected with anatomical high-risk features."
         elif l_origin and not risk:
-            txt = "R-AAOCA has been detected with anatomical low-risk features."
-        elif not l_origin and not risk:
             txt = "L-AAOCA has been detected with anatomical low-risk features."
+        elif not l_origin and not risk:
+            txt = "R-AAOCA has been detected with anatomical low-risk features."
         else:
             raise ValueError()
     return txt
@@ -185,7 +185,8 @@ def create_output_file(report: dict, thresh: float, txt_path: str):
             "############################################################################################################################\n")
         f.write(
             f"##########################################     Model Outputs for threshold: {round(thresh)}    ##########################################\n")
-        f.write("                              |   Anomaly Detection          |     Origin Classification    |Anatomical Risk Classification\n")
+        f.write(
+            "                              |   Anomaly Detection          |     Origin Classification    |Anatomical Risk Classification\n")
         line = "Probability".center(distance) + "|" + str(anomaly_val).center(distance) + "|" + str(origin_val).center(
             distance) + "|" + str(risk_val).center(distance) + "\n"
         f.write(line)
@@ -217,9 +218,10 @@ def main(args):
     output_path = join(OUTPUT_DIR, img_name)
     input_path = join(INPUT_DIR, args.input_path)
     output = main_inference(input_path, output_path, args.is_cropped, args.is_nifti, args.threshold, device, args.fast)
-    output['report'] = create_report(output, args.threshold )
-    JsonUtils.dump(join(OUTPUT_DIR, "output.json"), {k: (v * 100) if isinstance(v, float) else v  for k, v in output.items()})
-    create_output_file(output, args.threshold , join(OUTPUT_DIR, "output.txt"))
+    output['report'] = create_report(output, args.threshold)
+    JsonUtils.dump(join(OUTPUT_DIR, "output.json"),
+                   {k: (v * 100) if isinstance(v, float) else v for k, v in output.items()})
+    create_output_file(output, args.threshold, join(OUTPUT_DIR, "output.txt"))
     print(f"[INFO] Finished in {time.time() - tic} with threshold: {args.threshold}")
 
 
