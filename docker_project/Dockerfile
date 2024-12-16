@@ -10,7 +10,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /app/requirements.txt
-
+COPY ./dcm2niix /usr/local/bin
 RUN pip install -r /app/requirements.txt
 # Set the working directory
 WORKDIR /app

@@ -80,9 +80,9 @@ Expected Outputs:
 ```json
 10064059: {"anomaly": 0.0, "risk": 0, "origin": 0, "report": "No coronary anomalies(AAOCA) have been detected."}
 11943667: {"anomaly": 59.39, "risk": 0.0, "origin": 0.83, "report": "R-AAOCA has been detected with anatomical low-risk features."}
-12017913: {"anomaly": 100.0, "risk": 100.0, "origin": 0.49, "report": "L-AAOCA has been detected with anatomical high-risk features."}
-12065293: {"anomaly": 100.0, "risk": 99.99, "origin": 0.07, "report": "L-AAOCA has been detected with anatomical high-risk features."}
-12076929: {"anomaly": 81.39, "risk": 0.0, "origin": 100.0, "report": "R-AAOCA has been detected with anatomical low-risk features."}
+12017913: {"anomaly": 100.0, "risk": 100.0, "origin": 0.49, "report": "R-AAOCA has been detected with anatomical high-risk features."}
+12065293: {"anomaly": 100.0, "risk": 99.99, "origin": 0.07, "report": "R-AAOCA has been detected with anatomical high-risk features."}
+12076929: {"anomaly": 81.39, "risk": 0.0, "origin": 100.0, "report": "L-AAOCA has been detected with anatomical low-risk features."}
 ```
 
 The report.txt is like the following:

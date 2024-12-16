@@ -83,7 +83,7 @@ def process_cropped_sample(img_path: str | np.ndarray, threshold: float, device,
     else:
         origin = 0
         risk = 0
-    output = dict(anomaly=round(anomaly_percentage, 2), risk=round(risk, 2), origin=round(origin, 2))
+    output = dict(anomaly=round(anomaly_percentage, 4), risk=round(risk, 4), origin=round(origin, 4))
     print(f"[INFO] {time.time() - tic} to get the output: {output}")
     return output
 
