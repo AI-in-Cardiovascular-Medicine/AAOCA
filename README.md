@@ -261,6 +261,14 @@ Given a trained model, the GradCAM++ heatmap for an input CT image which is crop
 ```commandline
 python explainability.py --model_path results/anomaly_detection/train/model_1/best_val_model.pt --image_path <IMG_PATH.nii.gz> --output_path gradcams/heatmap.nii.gz 
 ```
+
+| Normal                                                         | R-AAOCA Low Anatomical Risk             | R-AAOCA High Anatomical Risk                                       |
+|----------------------------------------------------------------|-----------------------------------------|--------------------------------------------------------------------|
+| <img src="images_github/Normal.gif" width="750" height="500"/> | <img src="images_github/R-LowRisk.gif" width="750" height="500"/>  | <img src="images_github/R-HighRisk.gif" width="750" height="500"/> |
+
+| L-AAOCA Low Anatomical Risk                                       | L-AAOCA Low Anatomical Risk                                        | L-AAOCA High Anatomical Risk                                       |
+|-------------------------------------------------------------------|--------------------------------------------------------------------|--------------------------------------------------------------------|
+| <img src="images_github/L-LowRisk.gif" width="750" height="500"/> | <img src="images_github/L-LowRisk2.gif" width="750" height="500"/> | <img src="images_github/R-HighRisk.gif" width="750" height="500"/> | 
 # Result Plots
 
 ## TSNE 
