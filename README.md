@@ -268,7 +268,7 @@ python explainability.py --model_path results/anomaly_detection/train/model_1/be
 
 | L-AAOCA Low Anatomical Risk                                       | L-AAOCA Low Anatomical Risk                                        | L-AAOCA High Anatomical Risk                                       |
 |-------------------------------------------------------------------|--------------------------------------------------------------------|--------------------------------------------------------------------|
-| <img src="images_github/L-LowRisk.gif" width="250" height="250"/> | <img src="images_github/L-LowRisk2.gif" width="725050" height="250"/> | <img src="images_github/R-HighRisk.gif" width="250" height="250"/> | 
+| <img src="images_github/L-LowRisk.gif" width="250" height="250"/> | <img src="images_github/L-LowRisk2.gif" width="250" height="250"/> | <img src="images_github/R-HighRisk.gif" width="250" height="250"/> | 
 # Result Plots
 
 ## TSNE 
