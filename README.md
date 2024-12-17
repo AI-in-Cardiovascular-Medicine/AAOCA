@@ -335,13 +335,15 @@ python inference.py --model_path results/anomaly_detection/strategy3/model_1/bes
 ```
 Expected output is in `samples_output/mean_prediction.csv`
 
+Note: Rounded up to 3 places.
+
 img_path | prediction | cut-off label | true label |
----|-----|---------------|---------------|
-samples/normal/10064059/img.nii.gz | 8.801673e-09 | 0             | 0             
-samples/narco/12076929/img.nii.gz | 0.8139286 | 1             | 1            
-samples/narco/12017913/img.nii.gz | 0.9999955 | 1             | 1          
-samples/narco/11943667/img.nii.gz | 0.5938953 | 1             | 1        
-samples/narco/12065293/img.nii.gz | 0.9999939 | 1             | 1      
+---|------------|---------------|---------------|
+samples/normal/10064059/img.nii.gz | 0.000      | 0             | 0             
+samples/narco/12076929/img.nii.gz  | 0.814      | 1             | 1            
+samples/narco/12017913/img.nii.gz  | 1.000      | 1             | 1          
+samples/narco/11943667/img.nii.gz  | 0.599      | 1             | 1        
+samples/narco/12065293/img.nii.gz  | 1.000      | 1             | 1      
 
 Then run the following code for risk classification:
 ```commandline
@@ -350,11 +352,11 @@ python inference.py --model_path results/risk_classification/train/model_1/best_
 Expected output is in `samples_output/risk/mean_prediction.csv`
 
 img_path | prediction | cut-off label |true label |
----|----------------|---------------|---------------|
-samples/narco/12076929/img.nii.gz | 3.0752137e-05  | 0  | 0             
-samples/narco/12017913/img.nii.gz | 0.99998105     | 1  | 1           
-samples/narco/11943667/img.nii.gz | 2.4679664e-05  | 0 | 0            
-samples/narco/12065293/img.nii.gz | 0.99993753     | 1 | 1             
+---|------------|---------------|---------------|
+samples/narco/12076929/img.nii.gz | 0.000      | 0  | 0             
+samples/narco/12017913/img.nii.gz | 1.000      | 1  | 1           
+samples/narco/11943667/img.nii.gz | 0.000      | 0 | 0            
+samples/narco/12065293/img.nii.gz | 1.000      | 1 | 1             
 
 
 Then run the following code for risk classification:
@@ -363,12 +365,12 @@ python inference.py --model_path results/origin_classification/train/model_1/bes
 ```
 Expected output is in `samples_output/origin/mean_prediction.csv`
 
-img_path | prediction     | cut-off label | true label |
----|----------------|---------------|---------------|
-samples/narco/12076929/img.nii.gz | 0.99999887  | 1    | 1         
-samples/narco/12017913/img.nii.gz | 0.0049405308  | 0  | 0           
-samples/narco/11943667/img.nii.gz | 0.008305746  | 0   | 0          
-samples/narco/12065293/img.nii.gz | 0.00065958395  | 0    | 0         
+img_path | prediction | cut-off label | true label |
+---|------------|---------------|---------------|
+samples/narco/12076929/img.nii.gz | 1.000      | 1    | 1         
+samples/narco/12017913/img.nii.gz | 0.005      | 0  | 0           
+samples/narco/11943667/img.nii.gz | 0.008      | 0   | 0          
+samples/narco/12065293/img.nii.gz | 0.001      | 0    | 0         
 
 
 *Note*: One can also download data [A-Large-Scale-Dataset-and-Benchmark-for-Coronary-Artery-Segmentation-based-on-CT](https://www.kaggle.com/datasets/xiaoweixumedicalai/imagecas) which includes 1000 samples and apply the models to them. 
