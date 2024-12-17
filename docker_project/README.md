@@ -39,6 +39,7 @@ Create a folder called `web_service_models` it should be like the following:
 ```
 
 # Docker Image
+Build the image using the following command:
 ```commandline
 docker build . -t narco_script:latest
 ```
@@ -107,4 +108,11 @@ docker save narco_script:latest -o narco_script.tar
 ## Load docker image:
 ```commandline
 docker load -i narco_script.tar
+```
+
+## Large files:
+
+For large files increase the shared memory size of the docker container if you face any sudden docker failure or Core Dump Error:
+```commandline
+docker run --rm --shm-size 128MB -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/normal/10064059/img.nii.gz --is_nifti
 ```
