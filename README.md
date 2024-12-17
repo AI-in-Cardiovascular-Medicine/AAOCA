@@ -81,13 +81,9 @@ The dataset structure before pre-processing has to be like the following:
 │   │   │   │   ├── ...
 │   │   ├── 0
 │   ├── test_internal
-│   │   ├── 1
-│   │   ├── 0
+│   │   ├── ...
 │   ├── test_external
-│   │   ├── <img_id_1>
-│   │   │   ├── img.nii.gz
-│   │   ├── <img_id_1>
-│   │   │   ├── img.nii.gz
+│   │   ├── ...
 ├── origin_classification
 │   ├── train
 │   ├── ...
