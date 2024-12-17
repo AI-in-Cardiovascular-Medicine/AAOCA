@@ -264,3 +264,18 @@ def main_inference(input_path: str,
             output = process_cropped_sample(cropped_img_path, threshold, device, anomaly_model, origin_model,
                                             risk_model)
     return output
+
+
+def remove_nnunet_artifact(img_path: str):
+    """
+    Remove nnunet artifacts
+    :param img_path:
+    :return:
+    """
+    img_dir = os.path.dirname(img_path)
+    if os.path.exists(join(img_dir, "dataset.json")):
+        os.remove(join(img_dir, "dataset.json"))
+    if os.path.exists(join(img_dir, "plans.json")):
+        os.remove(join(img_dir, "plans.json"))
+    if os.path.exists(join(img_dir, "predict_from_raw_data_args.json")):
+        os.remove(join(img_dir, "predict_from_raw_data_args.json"))

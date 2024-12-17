@@ -1,4 +1,3 @@
-import os
 import shutil
 from argparse import ArgumentParser
 
@@ -156,6 +155,7 @@ def main_inference(input_path: str,
             # let's crop it :)
             process_sample(seg_path, cropped_img_path, cropped_seg_path, input_path, (8, 8, 6),
                            2, 3, (-1, 1, 1))
+            remove_nnunet_artifact(seg_path)
             output = process_cropped_sample(cropped_img_path, threshold, device, fast)
     return output
 
