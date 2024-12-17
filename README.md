@@ -25,8 +25,7 @@ Anomalous aortic origin of the coronary artery (AAOCA) is a rare cardiac conditi
 
 ## Project Online Page & Test
 To test the developed models in this repository, you can use the online web service provided in media-blocks: </b>
-[link](https://medical-blocks.ch/public_access/projects)
-
+[link](https://mb-neuro.medical-blocks.ch/public_access/projects)
 
 # System Requirements
 ## HardWare Requirements
