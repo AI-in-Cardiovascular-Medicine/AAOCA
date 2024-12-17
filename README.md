@@ -30,9 +30,9 @@ To test the developed models in this repository, you can use the online web serv
 # System Requirements
 ## HardWare Requirements
 - Train Requirements
-  - Minimum RAM of 24 GB
+  - Minimum RAM of 48 GB
   - Minimum CPU of 8 Cores
-  - A decent GPU with minimum of 24 GB VRAM such as Nvidia-4090, A600, A100, etc.
+  - A decent GPU with minimum of 24 GB VRAM such as Nvidia-4090, A6000, A100, etc.
 - Inference Arguments
   - Minimum RAM of 8 GB
   - Minimum CPU of 4 Cores
