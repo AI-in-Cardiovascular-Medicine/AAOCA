@@ -406,7 +406,7 @@ Please kindly cite the following paper if you use this repository.
 ```
 @article{Shiri2024,
   author = {Shiri, I., Baj, G., Mohammadi Kazaj, P., Bigler, M. R., Stark, A. W., Valenzuela, W., Kakizaki, R., Siepe, M., Windecker, S., Räber, L., Giannopoulos, A. A., Siontis, G. C. M., Buechel, R. R., & Gräni, C.},
-  title = {Artificial Intelligence Based Detection and Classification of Anomalous Aortic Origin of Coronary Arteries in Coronary CT Angiography: A Multi-Center Development, Testing and Clinical Evaluation Study},
+  title = {AI Based Anomalous Aortic Origin of Coronary Arteries Detection and Classification in Coronary CT Angiography},
   journal = {},
   year = {2024},
   note = {In submission},
@@ -415,7 +415,7 @@ Please kindly cite the following paper if you use this repository.
 }
 
 ```
-Shiri, I., Baj, G., Mohammadi Kazaj, P., Bigler, M. R., Stark, A. W., Valenzuela, W., Kakizaki, R., Siepe, M., Windecker, S., Räber, L., Giannopoulos, A. A., Siontis, G. C. M., Buechel, R. R., & Gräni, C. (2024). Artificial Intelligence Based Detection and Classification of Anomalous Aortic Origin of Coronary Arteries in Coronary CT Angiography: A Multi-Center Development, Testing and Clinical Evaluation Study. In submission.
+Shiri, I., Baj, G., Mohammadi Kazaj, P., Bigler, M. R., Stark, A. W., Valenzuela, W., Kakizaki, R., Siepe, M., Windecker, S., Räber, L., Giannopoulos, A. A., Siontis, G. C. M., Buechel, R. R., & Gräni, C. (2024). AI Based Anomalous Aortic Origin of Coronary Arteries Detection and Classification in Coronary CT Angiography. In submission.
 
 
 ```
