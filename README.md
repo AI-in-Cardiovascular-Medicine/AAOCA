@@ -237,7 +237,7 @@ After training your result directory would be like the following:
 │   │   ├── model_2
 │   │   ├── ...   
 ```
-**Note**: The process of training the other tasks namely risk and origin classifications are the same as anomaly detection. 
+**Note**: Training a model for the other tasks, namely risk and origin classifications, follows the same steps. 
 # Evaluate model
 To evaluate a trained model on a given labeled dataset use the `evaluation.py` script. The command would be, for example:
 ```commandline
