@@ -184,7 +184,7 @@ To resample the cropped images and saving it into a numpy file use the following
 python preprocessing_resampling.py --dataset_path data/anomaly_detection/train  --output_path numpy_datasets/anomaly_detection/train
 python preprocessing_resampling.py --dataset_path data/anomaly_detection/test_internal  --output_path numpy_datasets/anomaly_detection/test_internal
 ...
-python preprocessing_resampling.py --dataset_path data/risk_classification/test_internal  --output_path numpy_datasets/risk_classification/test_external
+python preprocessing_resampling.py --dataset_path data/risk_classification/test_external  --output_path numpy_datasets/risk_classification/test_external
 ```
 The resampled images are saved in the original folder like the following:
 ```commandline
