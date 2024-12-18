@@ -335,9 +335,9 @@ Note: Rounded up to 3 places.
 img_path | prediction | cut-off label | true label |
 ---|------------|---------------|---------------|
 samples/normal/10064059/img.nii.gz | 0.000      | 0             | 0             
-samples/narco/12076929/img.nii.gz  | 0.814      | 1             | 1            
+samples/narco/12076929/img.nii.gz  | 0.824      | 1             | 1            
 samples/narco/12017913/img.nii.gz  | 1.000      | 1             | 1          
-samples/narco/11943667/img.nii.gz  | 0.599      | 1             | 1        
+samples/narco/11943667/img.nii.gz  | 0.594      | 1             | 1        
 samples/narco/12065293/img.nii.gz  | 1.000      | 1             | 1      
 
 Then run the following code for risk classification:
