@@ -112,7 +112,9 @@ docker load -i narco_script.tar
 
 ## Large files:
 
-For large files increase the shared memory size of the docker container if you face any sudden docker failure or Core Dump Error:
+For large files, increase the shared memory size of the docker container if you face any sudden docker failure or Core Dump Error. 
+
+*Note:* The default shared memory size is 64MB. 
 ```commandline
 docker run --rm --shm-size 128MB -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/normal/10064059/img.nii.gz --is_nifti
 ```
