@@ -330,7 +330,9 @@ python inference.py --model_path results/anomaly_detection/strategy3/model_1/bes
 ```
 Expected output is in `samples_output/mean_prediction.csv`
 
-Note: Rounded up to 3 places.
+**Note:** 
+- Rounded up to 3 places.
+- Due to differences in docker and cuda versions, you may get very slightly different outputs on the web-application, which does not affect the final results. 
 
 img_path | prediction | cut-off label | true label |
 ---|------------|---------------|---------------|
