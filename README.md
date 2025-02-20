@@ -40,8 +40,7 @@ To test the developed models in this repository, you can use the online web serv
 ## Software Requirements
 ### OS Requirements
 
-The developed codes are tested on *Linux* operating system.
- The developmental version of the code has been tested on the following systems:
+The developmental version of the code has been tested on the following systems:
 
 * Linux: Ubuntu 22.04, Ubuntu 24.04, Pop!_OS 22.04
 * Mac OSX: Not tested
