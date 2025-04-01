@@ -407,12 +407,15 @@ Please kindly cite the following paper if you use this repository.
 ```
 @article{Shiri2024,
   author = {Shiri, I., Baj, G., Mohammadi Kazaj, P., Bigler, M. R., Stark, A. W., Valenzuela, W., Kakizaki, R., Siepe, M., Windecker, S., Räber, L., Giannopoulos, A. A., Siontis, G. C. M., Buechel, R. R., & Gräni, C.},
-  title = {AI Based Anomalous Aortic Origin of Coronary Arteries Detection and Classification in Coronary CT Angiography},
-  journal = {},
-  year = {2024},
-  note = {In submission},
-  doi = {},
-  pmid = {}
+  title = {AI-based detection and classification of anomalous aortic origin of coronary arteries using coronary CT angiography images},
+  journal = {Nature Communications},
+  volume = {16},
+  pages = {3095},
+  year = {2025},
+  ISSN = {2041-1723},
+  doi = {10.1038/s41467-025-58362-9},
+  url = {https://doi.org/10.1038/s41467-025-58362-9},
+
 }
 
 ```
