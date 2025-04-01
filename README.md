@@ -421,7 +421,10 @@ Please kindly cite the following paper if you use this repository.
 ```
 Shiri, I., Baj, G., Mohammadi Kazaj, P., Bigler, M. R., Stark, A. W., Valenzuela, W., Kakizaki, R., Siepe, M., Windecker, S., Räber, L., Giannopoulos, A. A., Siontis, G. C. M., Buechel, R. R., & Gräni, C. AI-based detection and classification of anomalous aortic origin of coronary arteries using coronary CT angiography images. Nat Commun 16, 3095 (2025). https://doi.org/10.1038/s41467-025-58362-9
 
-
+```
+```
+Link to paper: https://www.nature.com/articles/s41467-025-58362-9
+```
 ```
 This tool is intended for research purposes only and has not been approved for clinical use.
 ```
