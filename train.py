@@ -187,16 +187,20 @@ def train_net(config):
                    in_channels=train_loader.dataset[0][0].shape[0],
                    num_classes=1,  # number of output nodes
                    dropout_prob=config["dropout"]).to(device)
+    
     if config["pretrained_path"] is not None:  # Load pre-trained model if required
         print(f"Loading pretrained network from {config['pretrained_path']}")
         net.load_state_dict(torch.load(config["pretrained_path"], map_location=device))
+    
     optimizer = torch.optim.AdamW(net.parameters(), config["lr"], weight_decay=config["weight_decay"])
     loss_function = torch.nn.BCEWithLogitsLoss()
     lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=config["t_max"], eta_min=1e-6)
 
+
     path_res = config["output_dir"]
     path_checkpoint = os.path.join(path_res, "best_val_model.pt")
     early_stopping = EarlyStopping(patience=config["patience"], verbose=True, path=path_checkpoint)
+
 
     # -- Model training --
     train_loss_epochs = []
@@ -213,8 +217,10 @@ def train_net(config):
               f" lr: {round(optimizer.param_groups[0]['lr'], 6)},"
               f" train_time: {round(train_time, 1)}s, val_time: {round(val_time)}s"
               f"\n{config['output_dir']}")
+        
         if str(train_loss) == "nan":
             raise ValueError("Faced nan in train")
+        
         if str(val_loss) == "nan":
             raise ValueError("Faced nan in val")
         train_loss_epochs.append(train_loss)
