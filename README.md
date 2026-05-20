@@ -287,17 +287,22 @@ It generates plots for the entire test datasets as well as stratified results by
 All figures and tables that are present in the paper are generated with the `paper_plot_table_results.ipynb` notebook.
 
 # Inference
-Since all tasks use the same deep learning architecture (SEResNet-3D), the inference code is identical for all of them. The task can be switched simply by specifying the model path, with no need to manually specify it.
-Moreover, users can enable ensembling by providing multiple models.
+Since all tasks use the same deep learning architecture (SEResNet-3D), the inference code is identical for all of them. The task can be switched simply by specifying the model path, with no need to manually specify it. Moreover, users can enable ensembling by providing multiple models. Please download the pretrained models from this [link](https://mb-neuro.medical-blocks.ch/shared/file/bcf0feb0-b182-11ef-8549-91b9ef42f351).
 1. If the input nifti files are not cropped follow the following command: 
 ```commandline
-python inference.py --model_path results/anomaly_detection/train/model_1/best_val_model.pt results/anomaly_detection/train/model_4/best_val_model.pt --sample_path <path to nifti file>.nii.gz 
-python inference.py --model_path results/anomaly_detection/train/model_1/best_val_model.pt results/anomaly_detection/train/model_4/best_val_model.pt --sample_path <path to dir with nifti files> 
+python inference.py --model_path results/anomaly_detection/model_1/best_val_model.pt results/anomaly_detection/model_4/best_val_model.pt --sample_path <path to nifti file>.nii.gz 
+python inference.py --model_path results/anomaly_detection/model_1/best_val_model.pt results/anomaly_detection/model_4/best_val_model.pt --sample_path <path to dir with nifti files> 
 ```
 2.If the input nifti files are cropped: 
 ```commandline
-python inference.py --model_path results/anomaly_detection/train/model_1/best_val_model.pt results/anomaly_detection/train/model_4/best_val_model.pt --sample_path <path to nifti file>.nii.gz --is_cropped 
-python inference.py --model_path results/anomaly_detection/train/model_1/best_val_model.pt results/anomaly_detection/train/model_4/best_val_model.pt --sample_path <path to dir with nifti files> --is_cropped 
+# nifti file
+python inference.py --model_path results/anomaly_detection/model_1/best_val_model.pt results/anomaly_detection/model_4/best_val_model.pt --sample_path <path to nifti file>.nii.gz --is_cropped 
+
+# nifit dir
+python inference.py --model_path results/anomaly_detection/model_1/best_val_model.pt results/anomaly_detection/model_4/best_val_model.pt --sample_path <path to dir with nifti files> --is_cropped 
+
+# nifti dir & all models & limited samples
+python inference.py --model_path results/anomaly_detection/model_1/best_val_model.pt results/anomaly_detection/model_2/best_val_model.pt results/anomaly_detection/model_3/best_val_model.pt results/anomaly_detection/model_4/best_val_model.pt results/anomaly_detection/model_5/best_val_model.pt --sample_path <path to nifti file> --is_cropped --n_samples 20
 ```
 Finally, you can get the csv files containing the predictions in the `output` directory! 
 
