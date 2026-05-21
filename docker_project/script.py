@@ -1,9 +1,9 @@
 import shutil
 from argparse import ArgumentParser
-
+import time
 import torch.cuda
 from nnunetv2.inference.predict_from_raw_data import nnUNetPredictor
-
+from deep_utils import DirUtils
 from utils import *
 
 
@@ -21,25 +21,25 @@ def get_device():
 
 
 ANOMALY_DETECTION_MODEL_PATH = [
-    "web_service_models/classification_models/anomaly_detection/model_1/best_val_model.pt",
-    "web_service_models/classification_models/anomaly_detection/model_2/best_val_model.pt",
-    "web_service_models/classification_models/anomaly_detection/model_3/best_val_model.pt",
-    "web_service_models/classification_models/anomaly_detection/model_4/best_val_model.pt",
-    "web_service_models/classification_models/anomaly_detection/model_5/best_val_model.pt",
+    "web_service_models/anomaly_detection/model_1/best_val_model.pt",
+    "web_service_models/anomaly_detection/model_2/best_val_model.pt",
+    "web_service_models/anomaly_detection/model_3/best_val_model.pt",
+    "web_service_models/anomaly_detection/model_4/best_val_model.pt",
+    "web_service_models/anomaly_detection/model_5/best_val_model.pt",
 ]
 RISK_CLASSIFICATION_MODEL_PATH = [
-    "web_service_models/classification_models/risk_classification/model_1/best_val_model.pt",
-    "web_service_models/classification_models/risk_classification/model_2/best_val_model.pt",
-    "web_service_models/classification_models/risk_classification/model_3/best_val_model.pt",
-    "web_service_models/classification_models/risk_classification/model_4/best_val_model.pt",
-    "web_service_models/classification_models/risk_classification/model_5/best_val_model.pt"
+    "web_service_models/risk_classification/model_1/best_val_model.pt",
+    "web_service_models/risk_classification/model_2/best_val_model.pt",
+    "web_service_models/risk_classification/model_3/best_val_model.pt",
+    "web_service_models/risk_classification/model_4/best_val_model.pt",
+    "web_service_models/risk_classification/model_5/best_val_model.pt"
 ]
 ORIGIN_CLASSIFICATION_MODEL_PATH = [
-    "web_service_models/classification_models/origin_classification/model_1/best_val_model.pt",
-    "web_service_models/classification_models/origin_classification/model_2/best_val_model.pt",
-    "web_service_models/classification_models/origin_classification/model_3/best_val_model.pt",
-    "web_service_models/classification_models/origin_classification/model_4/best_val_model.pt",
-    "web_service_models/classification_models/origin_classification/model_5/best_val_model.pt",
+    "web_service_models/origin_classification/model_1/best_val_model.pt",
+    "web_service_models/origin_classification/model_2/best_val_model.pt",
+    "web_service_models/origin_classification/model_3/best_val_model.pt",
+    "web_service_models/origin_classification/model_4/best_val_model.pt",
+    "web_service_models/origin_classification/model_5/best_val_model.pt",
 
 ]
 SEGMENTATION_MODEL_PATH = "web_service_models/cardiac_segmentation"

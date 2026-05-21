@@ -49,19 +49,19 @@ Create two folders namely `input` and `output`. Then, put input image in the inp
 
 ## Running cropped nifti file
 ```commandline
-docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path img-path.nii.gz --is_cropped --is_nifti
+docker run --rm -v ./web_service_models:/app/web_service_models  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path img-path.nii.gz --is_cropped --is_nifti
 ```
 ## Running cropped nifti file with threshold
 ```commandline
-docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path img-path.nii.gz --is_cropped --is_nifti --threshold 0.5
+docker run --rm  -v ./web_service_models:/app/web_service_models  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path img-path.nii.gz --is_cropped --is_nifti --threshold 0.5
 ```
 ## Running non cropped nifti file
 ```commandline
-docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path img-path.nii.gz --is_nifti
+docker run --rm  -v ./web_service_models:/app/web_service_models  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path img-path.nii.gz --is_nifti
 ```
 ## Running with dicom zip file
 ```commandline
-docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path dicom-path.zip
+docker run --rm  -v ./web_service_models:/app/web_service_models  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path dicom-path.zip
 ```
 ## Output
 The output reports are in `output/output.txt` and `output/output.json`.
@@ -69,11 +69,11 @@ The output reports are in `output/output.txt` and `output/output.json`.
 ## Expected Output for the samples:
 Download the samples from the `Inference on samples data` and put them in the `input` directory, then run the following:
 ```commandline
-docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/normal/10064059/img.nii.gz --is_nifti
-docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/narco/11943667/img.nii.gz --is_nifti
-docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/narco/12017913/img.nii.gz --is_nifti
-docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/narco/12065293/img.nii.gz --is_nifti
-docker run --rm  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/narco/12076929/img.nii.gz --is_nifti
+docker run --rm  -v ./web_service_models:/app/web_service_models  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/normal/10064059/img.nii.gz --is_nifti
+docker run --rm  -v ./web_service_models:/app/web_service_models  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/narco/11943667/img.nii.gz --is_nifti
+docker run --rm  -v ./web_service_models:/app/web_service_models  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/narco/12017913/img.nii.gz --is_nifti
+docker run --rm  -v ./web_service_models:/app/web_service_models  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/narco/12065293/img.nii.gz --is_nifti
+docker run --rm  -v ./web_service_models:/app/web_service_models  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/narco/12076929/img.nii.gz --is_nifti
 ```
 Expected Outputs:
 
@@ -116,5 +116,5 @@ For large files, increase the shared memory size of the docker container if you 
 
 *Note:* The default shared memory size is 64MB. 
 ```commandline
-docker run --rm --shm-size 128MB -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/normal/10064059/img.nii.gz --is_nifti
+docker run --rm --shm-size 128MB -v ./web_service_models:/app/web_service_models  -v ./input:/app/input -v ./output:/app/output --gpus all narco_script:latest --input_path samples/normal/10064059/img.nii.gz --is_nifti
 ```

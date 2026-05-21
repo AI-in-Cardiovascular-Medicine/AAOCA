@@ -77,10 +77,10 @@ def load_model(model_path: str, device: torch.device | str, config: dict = None)
                    num_classes=1,  # number of output nodes
                    dropout_prob=config["dropout"]).to(device).eval()
     try:
-        net.load_state_dict(torch.load(model_path, map_location="cpu"))
+        net.load_state_dict(torch.load(model_path, map_location="cpu", weights_only=True))
     except:
         # Due to change in the library during our develop
-        weights = torch.load(model_path, map_location="cpu")
+        weights = torch.load(model_path, map_location="cpu", weights_only=True)
         weights['last_linear.weight'] = weights.pop('loss_func_layer.fc.weight')
         weights['last_linear.bias'] = weights.pop('loss_func_layer.fc.bias')
         net.load_state_dict(weights)

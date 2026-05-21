@@ -14,7 +14,7 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
 # Set the working directory
 WORKDIR /app
-COPY ./web_service_models /app/web_service_models
+# COPY ./web_service_models /app/web_service_models
 COPY script.py utils.py preprocessing_cropping.py  /app
 
 ENTRYPOINT ["python", "script.py"]
